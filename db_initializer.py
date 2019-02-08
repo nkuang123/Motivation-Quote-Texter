@@ -28,7 +28,7 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name('SpreadsheetExamp
 gc = gspread.authorize(credentials)
 
 # Quote database
-quote_db = gc.open('2019QuotesLog').worksheet('QuoteDB')
+quote_db = gc.open('Motivational Quotes Log').worksheet('QuoteDB')
 
 cell_list = quote_db.range('A2:A366')
 

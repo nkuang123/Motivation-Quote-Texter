@@ -13,7 +13,6 @@ scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/au
 
 credentials = ServiceAccountCredentials.from_json_keyfile_name('SpreadsheetExample-0fcdf1e80f81.json', scope)
 
-gc = gspread.authorize(credentials)
 
 # For now, we're going to mash everything together into one function. 
 # send_quote() will pull the quote of the day from the 'QuoteDB' sheet,
@@ -26,11 +25,13 @@ def send_quote():
 	# NOTE: Google Spreadsheets are indexed starting at 1, and 
 	# in Cartesian coordinate form e.g. for B1 -> (1, 2)
 
+	gc = gspread.authorize(credentials)
+
 	# Quote database
-	quote_db = gc.open('2019QuotesLog').worksheet('QuoteDB')
+	quote_db = gc.open('Motivational Quotes Log').worksheet('QuoteDB')
 
 	# Quote log that we will write to with data/time and quote information
-	quote_db_log = gc.open('2019QuotesLog').worksheet('QuoteLog')
+	quote_db_log = gc.open('Motivational Quotes Log').worksheet('QuoteLog')
 
 	# Some constants
 	quote_col = 1
@@ -38,7 +39,7 @@ def send_quote():
 
 	# db_size + 1 due to 1-indexing, and + 1 again since we start at 
 	# index 2
-	row_index = 1 + random.randrange(db_size)
+	row_index = 2 + random.randrange(db_size)
 
 	quote_of_the_day = quote_db.cell(row_index, quote_col).value
 
@@ -61,7 +62,7 @@ def send_quote():
 	print("Row Index: " + str(row_index))
 
 	# Finally, to send the quote to the phone number in SMS
-	# SMS.send(quote_of_the_day)
+	SMS.send(quote_of_the_day)
 
 # date_string_today() returns the current date and time in a 
 # string format, e.g. Jan 1, 2019 (12:49:03 PM)
@@ -71,7 +72,21 @@ def date_string_today():
 
 # In order to have the script send messages at specified times, we 
 # will use the schedule library.
-schedule.every(5).seconds.do(send_quote)
+# # We will send a quote each day at 12:45 PM.
+times = ['10:05', '10:15', '10:25', '10:35', '10:45', '10:55',
+	'11:05', '11:15', '11:25', '11:35', '11:45', '11:55',
+	'12:05', '12:15', '12:25', '12:35', '12:45', '12:55', 
+	'13:05', '13:15', '13:25', '13:35', '13:45', '13:55',
+	'14:05', '14:15', '14:25', '14:35', '14:45', '14:55',
+	'15:05', '15:15', '15:25', '15:35', '15:45', '15:55', 
+	'16:05', '16:15', '16:25', '16:35', '16:45', '16:55',
+	'17:05', '17:15', '17:25', '17:35', '17:45', '17:55']
+
+rand_time = times[random.randrange(len(times))]
+
+print(rand_time)
+
+schedule.every().day.at(rand_time).do(send_quote)
 
 while True:
 	# gc.login() will refresh the access token for the Google Spreadsheet API,
