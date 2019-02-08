@@ -72,7 +72,8 @@ def date_string_today():
 
 # In order to have the script send messages at specified times, we 
 # will use the schedule library.
-# # We will send a quote each day at 12:45 PM.
+
+# lets create a list of times that we'd like to receive a quote
 times = ['10:05', '10:15', '10:25', '10:35', '10:45', '10:55',
 	'11:05', '11:15', '11:25', '11:35', '11:45', '11:55',
 	'12:05', '12:15', '12:25', '12:35', '12:45', '12:55', 
